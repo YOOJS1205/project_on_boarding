@@ -1,13 +1,8 @@
 import React from 'react';
 import useGetUserInfo from '../hooks/useGetUserInfo';
 
-interface FormValue {
-  id: string;
-  password: string;
-}
-
 export default function Todo() {
-  const userInfo = useGetUserInfo();
+  const userInfo: any = useGetUserInfo();
   return (
     <div>
       <h1>{userInfo.id}</h1>

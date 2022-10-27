@@ -7,7 +7,7 @@ interface FormValue {
   password: string;
 }
 
-export default function useGetUserInfo() {
+export default function useGetUserInfo(): FormValue | JSX.Element {
   const { isLoading, isError, data, error } = useQuery(
     ['userInfo'],
     getUserAPI,

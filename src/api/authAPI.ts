@@ -14,8 +14,6 @@ export const loginAPI = async (
       id: id,
       password: password,
     });
-    localStorage.setItem('id', res.data.id);
-    localStorage.setItem('password', res.data.password);
     return res.data;
   } catch (error) {
     console.error(error);
@@ -33,7 +31,7 @@ export const joinAPI = async (id: string, password: string): Promise<void> => {
   }
 };
 
-export const getUserAPI = async () => {
+export const getUserAPI = async (): Promise<FormValue> => {
   try {
     const res = await axios.get('/user');
     return res.data;

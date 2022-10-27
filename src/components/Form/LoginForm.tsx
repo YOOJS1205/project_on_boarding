@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { loginAPI } from '../../api/authAPI';
 
@@ -17,6 +18,7 @@ interface FormValue {
 }
 
 export default function LoginForm() {
+  const navigate = useNavigate();
   const {
     register,
     getValues,
@@ -26,6 +28,7 @@ export default function LoginForm() {
 
   const onSubmitLoginForm = (): void => {
     loginAPI(getValues('id'), getValues('password'));
+    navigate('/todo');
   };
 
   return (
