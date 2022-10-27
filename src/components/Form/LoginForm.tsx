@@ -19,11 +19,14 @@ interface FormValue {
 export default function LoginForm() {
   const {
     register,
+    getValues,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValue>();
 
-  const onSubmitLoginForm = () => loginAPI('id', 'password');
+  const onSubmitLoginForm = (): void => {
+    loginAPI(getValues('id'), getValues('password'));
+  };
 
   return (
     <FormContainer onSubmit={handleSubmit(onSubmitLoginForm)}>

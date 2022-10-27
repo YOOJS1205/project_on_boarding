@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { joinAPI } from '../../api/authAPI';
 
@@ -19,16 +19,17 @@ interface FormValue {
 export default function JoinForm() {
   const {
     register,
+    getValues,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValue>();
 
-  const onSubmitForm = useCallback(() => {
-    joinAPI('id', 'password');
-  }, []);
+  const onSubmitJoinForm = (): void => {
+    joinAPI(getValues('id'), getValues('password'));
+  };
 
   return (
-    <FormContainer onSubmit={handleSubmit(onSubmitForm)}>
+    <FormContainer onSubmit={handleSubmit(onSubmitJoinForm)}>
       <Title>회원가입</Title>
       <Label htmlFor="id">아이디</Label>
       <Input
