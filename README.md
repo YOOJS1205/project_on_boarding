@@ -8,6 +8,7 @@
 - axios
 - MSW
 - React-query
+- Yarn Berry
 
 ## 구현 내용
 
@@ -92,3 +93,100 @@ export const worker = setupWorker(...handlers);
 <br><br>
 
 ### 로그인으로 얻은 아이디, 비밀번호 React-query로 관리
+
+- `React-query`로 유저 정보를 가져오는 `Custom-Hook` 생성
+
+```typescript
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { getUserAPI } from '../api/authAPI';
+
+interface FormValue {
+  id: string;
+  password: string;
+}
+
+export default function useGetUserInfo(): FormValue | JSX.Element {
+  const { isLoading, isError, data, error } = useQuery(
+    ['userInfo'],
+    getUserAPI,
+    {
+      refetchOnWindowFocus: false,
+      retry: 0,
+    },
+  );
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (isError) {
+    return <p>Error Hanppend!</p>;
+  }
+
+  return data;
+}
+```
+
+## PR Point
+
+1. `useQuery`에 `TypeScript` 적용하는 것이 너무 어렵습니다.
+
+```typescript
+// useQuery에 들어가는 비동기 처리 함수
+export const getUserAPI = async (): Promise<FormValue> => {
+  try {
+    const res = await axios.get('/user');
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// useQuery를 사용하여 유저 아이디, 비밀번호를 가져오는 custom hook
+export default function useGetUserInfo(): FormValue | JSX.Element {
+  const { isLoading, isError, data, error } = useQuery(
+    ['userInfo'],
+    getUserAPI,
+    {
+      refetchOnWindowFocus: false,
+      retry: 0,
+    },
+  );
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (isError) {
+    return <p>Error Hanppend!</p>;
+  }
+
+  return data;
+}
+
+// Todo 페이지에서 유저 정보 가져오는 파트
+// any를 참지 못하였습니다...
+export default function Todo() {
+  const userInfo: any = useGetUserInfo();
+  return (
+    <div>
+      <h1>{userInfo.id}</h1>
+      <h1>{userInfo.password}</h1>
+    </div>
+  );
+}
+```
+
+- `userInfo`의 `id password` 프로퍼티에 접근하고 싶은데 마음처럼 되지않아 `any` 타입을 사용했습니다.
+
+2. 로그인 시도를 성공했을 때 `todo` 페이지로 넘기고 싶습니다.
+
+```typescript
+const onSubmitLoginForm = (): void => {
+  loginAPI(getValues('id'), getValues('password'));
+  navigate('/todo');
+};
+```
+
+- `navigate`를 어떻게 처리하는 것이 좋을까요?
