@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import { loginAPI } from '../../api/authAPI';
+import { joinAPI } from '../../api/authAPI';
 
 import {
   FormContainer,
@@ -16,18 +16,20 @@ interface FormValue {
   password: string;
 }
 
-export default function LoginForm() {
+export default function JoinForm() {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValue>();
 
-  const onSubmitLoginForm = () => loginAPI('id', 'password');
+  const onSubmitForm = useCallback(() => {
+    joinAPI('id', 'password');
+  }, []);
 
   return (
-    <FormContainer onSubmit={handleSubmit(onSubmitLoginForm)}>
-      <Title>로그인</Title>
+    <FormContainer onSubmit={handleSubmit(onSubmitForm)}>
+      <Title>회원가입</Title>
       <Label htmlFor="id">아이디</Label>
       <Input
         id="id"
@@ -45,7 +47,7 @@ export default function LoginForm() {
         })}
       />
       {errors.password && <ErrMsg>{errors.password.message}</ErrMsg>}
-      <Button type="submit">로그인하기</Button>
+      <Button type="submit">회원가입하기</Button>
     </FormContainer>
   );
 }
