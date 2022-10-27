@@ -52,4 +52,13 @@ export const handlers = [
       }),
     );
   }),
+  rest.get<FormValue>('/user', async (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        id: 'junsang@gmail.com',
+        password: '12345678',
+      }),
+    );
+  }),
 ];
